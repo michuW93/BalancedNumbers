@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 public class Main {
@@ -9,12 +10,22 @@ public class Main {
         int numberOfAttempts = in.nextInt();
         for (int i = 0; i < numberOfAttempts; i++) {
             BigDecimal fromNumber = in.nextBigDecimal();
-            findBalancedNumber(fromNumber);
+            findBalancedNumberOptimized(fromNumber);
         }
     }
 
-    private static boolean isEven(BigDecimal number){
-        if(number.remainder(new BigDecimal("2")).compareTo(BigDecimal.ZERO) != 0){
+    private static void findBalancedNumberOptimized(BigDecimal fromNumber) { //2,6,10,14,18,22,26...
+        if (fromNumber.compareTo(BigDecimal.ONE) == 0) {
+            System.out.println(2);
+        } else {
+            BigDecimal result = fromNumber.divide(new BigDecimal("4")).setScale(0, RoundingMode.HALF_UP).add(BigDecimal.ONE);
+            result = (TWO.multiply(result).subtract(BigDecimal.ONE)).multiply(TWO); //2(2n-1)
+            System.out.println(result);
+        }
+    }
+
+    private static boolean isEven(BigDecimal number) {
+        if (number.remainder(new BigDecimal("2")).compareTo(BigDecimal.ZERO) != 0) {
             return false;
         }
         return true;
@@ -32,7 +43,7 @@ public class Main {
             }
             for (BigDecimal divider = TWO; (divider.compareTo(potentialBalancedNumber.divide(TWO)) == -1 || divider.compareTo(potentialBalancedNumber.divide(TWO)) == 0); divider = divider.add(BigDecimal.ONE)) {
                 boolean isDivisor = potentialBalancedNumber.remainder(divider).compareTo(BigDecimal.ZERO) == 0;
-                if(isDivisor){
+                if (isDivisor) {
                     boolean isEven = divider.remainder(new BigDecimal("2")).compareTo(BigDecimal.ZERO) == 0;
                     boolean isOdd = divider.remainder(new BigDecimal("2")).compareTo(BigDecimal.ZERO) != 0;
                     if (isDivisor && isEven) {
